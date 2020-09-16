@@ -14,7 +14,7 @@ public class PLA {
         this.features = features;
         this.x = new Vector[size];
         for (int i = 0; i < size; i++) {
-            x[0] = new Vector(features + 1);
+            x[i] = new Vector(features + 1);
         }
         this.y = new Vector(size);
         this.weights = new Vector(features + 1);
@@ -105,15 +105,24 @@ public class PLA {
         return Math.signum(Vector.dot(weights, x[index])) == y.vector[index];
     }
 
-    //generate linearly seperable data?? TODO
+    //generate linearly separable data?? TODO
+    // should be linearly separable with a horizontal line
     public void generateCoordinates() {
         Random r = new Random();
-        for (int i = 0; i < size; i++) {
-            x[0].vector[0] = 0;
+        for (int i = 0; i < size/2; i++) {
+            x[i].vector[0] = 0;
             for (int j = 1; j < features; j++) {
-                x[i].vector[j] = r.nextInt(100);
+                x[i].vector[j] = r.nextInt(50) + 50;
             }
-            y.vector[i] = r.nextInt(2)*2 - 1;
+            y.vector[i] = 1;
+        }
+
+        for (int i = size/2; i < size; i++) {
+            x[i].vector[0] = 0;
+            for (int j = 1; j < features; j++) {
+                x[i].vector[j] = r.nextInt(50);
+            }
+            y.vector[i] = - 1;
         }
 
     }
@@ -152,6 +161,7 @@ public class PLA {
                     updatePoint(i);
                     b = false;
                 }
+                display(this);
             }
         }
     }
@@ -163,7 +173,7 @@ public class PLA {
         System.out.println(pla.weights);
         int sum = 0;
         for (int i = 0; i < pla.x.length; i++) {
-            System.out.println(pla.correctlyClassified(i));
+            //System.out.println(pla.correctlyClassified(i));
             if (pla.correctlyClassified(i)) {
                 sum++;
             }
